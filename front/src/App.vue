@@ -21,7 +21,6 @@
           </el-dialog>
 
           <el-button type="primary" class="re" @click="dialogVisibleRegister = true">Register</el-button>
-
           <el-dialog
             title="Register"
             :visible.sync="dialogVisibleRegister"
@@ -37,6 +36,7 @@
           </el-dialog>
 
           <Add class="a"/>
+          <el-input type="text" placeholder="Please Enter Name" class="in" v-model="searchName"/><el-button type="primary" class="bt" @click="search">Search</el-button>
         </caption>
         
         <thead>
@@ -88,7 +88,8 @@ export default {
         username:"",
         password:"",
         password2:""
-      }
+      },
+      searchName:""
     }
   },
   methods: {
@@ -162,6 +163,24 @@ export default {
       } else {
         this.$alert("Passwords do not match!");
       }
+    },
+    search(){
+      if (sessionStorage.getItem("isLogin") == "true"){
+        this.page = 1,
+        axios({
+          url: "http://localhost:8080/search",
+          method: "POST",
+          data: {
+            name: this.searchName
+          }
+        }).then( res=> {
+          this.students = res.data;
+        })
+      } else {
+        this.$alert("Please log in.");
+      }
+
+      
     }
   },
   computed: {
@@ -175,5 +194,12 @@ export default {
 <style>
 .re {
   margin-left: 10px;
+}
+.bt {
+  margin-left: 10px;
+}
+.in {
+  display: inline-block;
+  width: 200px;
 }
 </style>

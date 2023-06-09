@@ -9,6 +9,7 @@ import org.example.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -67,6 +68,17 @@ public class Controller {
         } else {
             return "0";
         }
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestBody HashMap<String, String> data){
+        String nameSearch = data.get("name");
+        QueryWrapper<Student> stuQueryWrapper = new QueryWrapper<>();
+        stuQueryWrapper.like("name", nameSearch);
+        //select * from student where name like '%nameSearch%';
+        List<Student> student = studentMapper.selectList(stuQueryWrapper);
+        return gson.toJson(student);
+
     }
 
 }
